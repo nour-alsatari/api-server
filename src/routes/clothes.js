@@ -14,35 +14,31 @@ router.delete("/clothes/:id", deleteClothe);
 async function createClothes(req, res) {
   let newclothes = req.body;
   console.log(req.body);
-  let newclothesinDB = await clothes.create(newclothes); // model.create({ ClotheName: "", MinutesToPrepare: "" })
+  let newclothesinDB = await clothes.createRecord(newclothes); // model.create({ ClotheName: "", MinutesToPrepare: "" })
   res.status(201).json(newclothesinDB);
 }
 
 async function getAllClothes(req, res) {
-  let allclothes = await clothes.findAll();
+  let allclothes = await clothes.readAllRecords()
   res.json(allclothes);
 }
 
 async function getOneClothe(req, res) {
   let fid = parseInt(req.params.id);
-  let Clothe = await clothes.findOne({ where: { id: fid } });
+  let Clothe = await clothes.readRecord();
   res.json(Clothe);
 }
 
 async function updateClothe(req, res) {
   let cid = parseInt(req.params.id);
-  let updatedClothe = await clothes.update(req.body, { where: { id: cid } });
+  let updatedClothe = await clothes.updateRecord();
   let retrievedClothe = await clothes.findOne({ where: { id: cid } });
   res.status(201).json(retrievedClothe);
 }
 
 async function deleteClothe(req, res) {
   let cid = parseInt(req.params.id);
-  let deleted = await clothes.destroy({
-    where: {
-      id: cid,
-    },
-  });
+  let deleted = await clothes.deleteRecord();
   deleted
     ? res.status(201).send("deleted successfully")
     : res.status(500).send("something went wrong");
